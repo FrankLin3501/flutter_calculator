@@ -3,13 +3,12 @@ import 'package:flutter/material.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Calculator',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primaryColor: Colors.yellow[400],
       ),
       home: MyHomePage(title: 'Calculator'),
     );
@@ -25,135 +24,123 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String strAns = '0';
+  String strScreen = '0';
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Calculator')
-      ),
+      appBar: AppBar(title: Text('Calculator')),
       body: Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Container(
-              constraints: BoxConstraints.expand(
-                height: Theme.of(context).textTheme.display1.fontSize * 1.1 + 100.0,
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          Container(
+            constraints: BoxConstraints.expand(
+              height:
+                  Theme.of(context).textTheme.display1.fontSize * 1.1 + 64.0,
+            ),
+            alignment: Alignment.bottomRight,
+            color: Colors.white,
+            child: Text(
+              strScreen,
+              style: TextStyle(
+                fontFamily: 'monospace',
+                fontSize: 50.0,
+                color: Colors.black,
               ),
-              alignment: Alignment.bottomRight,
-              color: Colors.white,
-              child: Text(
-                strAns,
-                style: TextStyle(
-                  fontFamily: 'monospace',
-                  fontSize: 50.0,
-                  color: Colors.black,
-                ),
-                textAlign: TextAlign.right,
-              ),
+              textAlign: TextAlign.right,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                _button('7', click),
-                _button('8', click),
-                _button('9', click),
-                _button('/', click),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                _button('4', click),
-                _button('5', click),
-                _button('6', click),
-                _button('*', click),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                _button('1', click),
-                _button('2', click),
-                _button('3', click),
-                _button('-', click),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                _button('C', click),
-                _button('0', click),
-                _button('=', click),
-                _button('+', click),
-              ],
-            )
-          ],
-        )
-      ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              _button('7', click),
+              _button('8', click),
+              _button('9', click),
+              _button('÷', click),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              _button('4', click),
+              _button('5', click),
+              _button('6', click),
+              _button('×', click),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              _button('1', click),
+              _button('2', click),
+              _button('3', click),
+              _button('－', click),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              _button('C', click),
+              _button('0', click),
+              _button('＝', click),
+              _button('＋', click),
+            ],
+          )
+        ],
+      )),
     );
   }
 
   Widget _button(String number, Function(String number) f) {
     return MaterialButton(
-      height: 92.0,
-      child: Text(
-        number,
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32.0)
-      ),
+      height: 94.0,
+      child: Text(number,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 36.0, fontFamily: 'monospace')),
       textColor: Colors.black,
-      color: Colors.grey[200],
-      onPressed: () => f(number),
+      color: Colors.yellow[200],
+      onPressed: () => setState(() => this.strScreen = f(number)),
     );
   }
 
-  int ans = 0;
+  int numStore = 0;
   String method = '';
   bool isStart = true;
-  void click(String number) {
-    setState(() {
-      if (int.tryParse(number) != null) {
-        if (isStart) {
-          strAns = '0';
-        }
-        strAns += number;
-        isStart = false;
-      } else {
-        switch (number) {
-          case 'C':
-            strAns = '0';
-            method = '';
-            ans = 0;
-            isStart = true;
-            break;
-          case '+':case '-':case '*':case '/':
-            method = number;
-            ans = int.parse(strAns);
-            isStart = true;
-            break;
-          case '=':
-            switch (method) {
-              case '+':
-                ans += int.parse(strAns);
-              break;
-              case '-':
-                ans -= int.parse(strAns);
-              break;
-              case '*':
-                ans *= int.parse(strAns);
-              break;
-              case '/':
-                ans ~/= int.parse(strAns);
-              break;
-            }
-            strAns = ans.toString();
-            break;
-        }
-      }
-      strAns = int.parse(strAns).toString();
-    });
-  }
+  String click(String number) {
+    var _operator = ['＋', '－', '×', '÷'];
 
+    if (int.tryParse(number) != null) {
+      if (isStart) strScreen = '0';
+      strScreen += number;
+      isStart = false;
+    } else if (_operator.contains(number)) {
+      method = number;
+      numStore = int.parse(strScreen);
+      isStart = true;
+    } else if (number == 'C') {
+      strScreen = '0';
+      method = '';
+      numStore = 0;
+      isStart = true;
+    } else {
+      switch (method) {
+        case '+':
+          numStore += int.parse(strScreen);
+          break;
+        case '-':
+          numStore -= int.parse(strScreen);
+          break;
+        case '*':
+          numStore *= int.parse(strScreen);
+          break;
+        case '/':
+          numStore ~/= int.parse(strScreen);
+          break;
+      }
+      strScreen = numStore.toString();
+      isStart = true;
+    }
+    strScreen = int.parse(strScreen).toString();
+    return strScreen;
+  }
 }
