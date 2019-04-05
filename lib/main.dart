@@ -75,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
               _button('1', click),
               _button('2', click),
               _button('3', click),
-              _button('－', click),
+              _button('-', click),
             ],
           ),
           Row(
@@ -84,7 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
               _button('C', click),
               _button('0', click),
               _button('＝', click),
-              _button('＋', click),
+              _button('+', click),
             ],
           )
         ],
@@ -107,7 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
   String method = '';
   bool isStart = true;
   String click(String number) {
-    var _operator = ['＋', '－', '×', '÷'];
+    var _operator = ['+', '-', '×', '÷'];
 
     if (int.tryParse(number) != null) {
       if (isStart) strScreen = '0';
@@ -130,10 +130,10 @@ class _MyHomePageState extends State<MyHomePage> {
         case '-':
           numStore -= int.parse(strScreen);
           break;
-        case '*':
+        case '×':
           numStore *= int.parse(strScreen);
           break;
-        case '/':
+        case '÷':
           numStore ~/= int.parse(strScreen);
           break;
       }
